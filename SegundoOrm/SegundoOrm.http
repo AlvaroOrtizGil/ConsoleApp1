@@ -1,0 +1,31 @@
+@SegundoOrm_HostAddress = http://localhost:5014
+
+### Obtener todos los clientes
+GET {{SegundoOrm_HostAddress}}/api/cliente
+Accept: application/json
+
+###
+
+### Obtener un cliente por ID (reemplaza el `id` con el valor que desees)
+GET {{SegundoOrm_HostAddress}}/api/cliente/1
+Accept: application/json
+
+###
+
+### Crear un nuevo cliente (debes enviar los datos en formato JSON)
+POST {{SegundoOrm_HostAddress}}/api/cliente
+Content-Type: application/json
+{
+    "nombre": "Juan Pérez",
+    "dni": "12345678A",
+    "telefono": "123456789",
+    "email": "juan.perez@email.com"
+}
+
+###
+
+### Eliminar un cliente por ID (reemplaza el `id` con el cliente que deseas eliminar)
+DELETE {{SegundoOrm_HostAddress}}/api/cliente/1
+Accept: application/json
+
+###
