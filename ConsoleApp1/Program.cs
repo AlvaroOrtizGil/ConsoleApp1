@@ -1,6 +1,8 @@
 ﻿using ConsoleApp1.Controllers;
 using ConsoleApp1.Models;
 using Microsoft.EntityFrameworkCore;
+using System;
+
 namespace ConsoleApp1
 {
     class Program
@@ -21,16 +23,24 @@ namespace ConsoleApp1
                 var clienteController = new ClienteController(context);
 
                 // Crear un cliente
-                clienteController.CrearCliente("Juan Pérez", "11345278A", "123456789", "juan.peSDrez@email.com");
+                clienteController.CrearCliente("Juan Pérez", "11345278A", "123456789", "juan.perez@email.com");
 
                 // Mostrar todos los clientes
-                clienteController.MostrarClientes();
+                var clientes = clienteController.ObtenerClientes();
+                foreach (var cliente in clientes)
+                {
+                    Console.WriteLine($"Cliente: {cliente.Nombre}, DNI: {cliente.Dni}, Teléfono: {cliente.Telefono}, Email: {cliente.Email}");
+                }
 
                 // Mostrar un cliente por su ID
-                clienteController.MostrarClientePorId(1);
+                var clientePorId = clienteController.ObtenerClientePorId(1);
+                if (clientePorId != null)
+                {
+                    Console.WriteLine($"Cliente encontrado: {clientePorId.Nombre}, DNI: {clientePorId.Dni}, Teléfono: {clientePorId.Telefono}, Email: {clientePorId.Email}");
+                }
 
                 // Actualizar un cliente
-                clienteController.ActualizarCliente(1, "JuaDSn Pérez Actualizado", "87654321B", "987654321", "juan.perez.actualizado@email.com");
+                clienteController.ActualizarCliente(1, "Juan Pérez Actualizado", "87654321B", "987654321", "juan.perez.actualizado@email.com");
 
                 // Eliminar un cliente
                 clienteController.EliminarCliente(1);
@@ -39,4 +49,5 @@ namespace ConsoleApp1
             Console.ReadLine(); // Mantener la consola abierta para ver los resultados
         }
     }
+
 }

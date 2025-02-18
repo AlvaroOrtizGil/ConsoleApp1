@@ -1,14 +1,7 @@
-﻿using ConsoleApp1.Controladores;
-using ConsoleApp1.Models;
+﻿using ConsoleApp1.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-
-using Microsoft.EntityFrameworkCore;
-
 
 namespace ConsoleApp1.Controllers
 {
@@ -20,77 +13,97 @@ namespace ConsoleApp1.Controllers
         {
             _context = context;
         }
-        
-        // Crear un nuevo cliente
-        public void CrearCliente(string nombre, string dni, string telefono, string email)
-        {
-            var nuevoCliente = new Cliente(_context)
-            {
-                Nombre = nombre,
-                Dni = dni,
-                Telefono = telefono,
-                Email = email
-            };
-            nuevoCliente.CrearCliente();
-            Console.WriteLine("Cliente creado con éxito.");
-        }
 
-        // Mostrar todos los clientes
-        public void MostrarClientes()
+        // Método para crear un nuevo cliente
+        public void CrearCliente(string nombre, string dni, string? telefono, string? email)
         {
-            var clientes = Cliente.ObtenerClientes(_context);
-            Console.WriteLine("Clientes registrados:");
-            foreach (var cliente in clientes)
+            try
             {
-                Console.WriteLine($"ID: {cliente.Id}, Nombre: {cliente.Nombre}, DNI: {cliente.Dni}");
+                var cliente = new Cliente
+                {
+                    Nombre = nombre,
+                    Dni = dni,
+                    Telefono = telefono,
+                    Email = email
+                };
+
+                cliente.CrearCliente();  // Crear cliente usando el método de la clase Cliente
+                Console.WriteLine("Cliente creado correctamente.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al crear cliente: {ex.Message}");
             }
         }
 
-        // Mostrar un cliente por ID
-        public void MostrarClientePorId(int id)
+        // Método para obtener todos los clientes
+        public List<Cliente> ObtenerClientes()
         {
-            var cliente = Cliente.ObtenerClientePorId(_context, id);
-            if (cliente != null)
+            try
             {
-                Console.WriteLine($"Cliente encontrado: {cliente.Nombre}, DNI: {cliente.Dni}");
+                return Cliente.ObtenerClientes(_context);  // Llamada al método estático para obtener clientes
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("Cliente no encontrado.");
+                Console.WriteLine($"Error al obtener clientes: {ex.Message}");
+                return new List<Cliente>(); // Retorna una lista vacía en caso de error
             }
         }
 
-        // Actualizar un cliente
-        public void ActualizarCliente(int id, string nuevoNombre, string nuevoDni, string nuevoTelefono, string nuevoEmail)
+        // Método para obtener un cliente por ID
+        public Cliente ObtenerClientePorId(int id)
         {
-            var cliente = Cliente.ObtenerClientePorId(_context, id);
-            if (cliente != null)
+            try
             {
-                cliente.Nombre = nuevoNombre;
-                cliente.Dni = nuevoDni;
-                cliente.Telefono = nuevoTelefono;
-                cliente.Email = nuevoEmail;
-                cliente.ActualizarCliente();
-                Console.WriteLine("Cliente actualizado con éxito.");
+                var cliente = Cliente.ObtenerClientePorId(_context, id);
+                if (cliente == null)
+                {
+                    Console.WriteLine($"Cliente con ID {id} no encontrado.");
+                }
+                return cliente;
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("Cliente no encontrado.");
+                Console.WriteLine($"Error al obtener cliente: {ex.Message}");
+                return null;
             }
         }
 
-        // Eliminar un cliente
+        // Método para actualizar un cliente
+        public void ActualizarCliente(int id, string nombre, string dni, string? telefono, string? email)
+        {
+            try
+            {
+                var cliente = new Cliente
+                {
+                    Id = id,
+                    Nombre = nombre,
+                    Dni = dni,
+                    Telefono = telefono,
+                    Email = email
+                };
+
+                cliente.ActualizarCliente();  // Actualizar cliente usando el método de la clase Cliente
+                Console.WriteLine("Cliente actualizado correctamente.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al actualizar cliente: {ex.Message}");
+            }
+        }
+
+        // Método para eliminar un cliente por ID
         public void EliminarCliente(int id)
         {
-            var cliente = Cliente.ObtenerClientePorId(_context, id);
-            if (cliente != null)
+            try
             {
-                cliente.EliminarCliente();
-                Console.WriteLine("Cliente eliminado con éxito.");
+                var cliente = new Cliente { Id = id };  // No es necesario pasar el contexto
+                cliente.EliminarCliente();  // Eliminar cliente usando el método de la clase Cliente
+                Console.WriteLine("Cliente eliminado correctamente.");
             }
-            else
+            catch (Exception ex)
             {
-                Console.WriteLine("Cliente no encontrado.");
+                Console.WriteLine($"Error al eliminar cliente: {ex.Message}");
             }
         }
     }

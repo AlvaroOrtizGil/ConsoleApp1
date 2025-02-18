@@ -1,97 +1,97 @@
-﻿using ConsoleApp1.Controladores;
-using ConsoleApp1.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using ConsoleApp1.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
-
-namespace ConsoleApp1.Controllers
+namespace WebApi.Controllers
 {
-    public class ClienteController
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ClienteController : ControllerBase
     {
-        private readonly DbContext _context;
+        private readonly CochesContext _context;
 
-        public ClienteController(DbContext context)
+        public ClienteController(CochesContext context)
         {
             _context = context;
         }
 
-        // Crear un nuevo cliente
-        public void CrearCliente(string nombre, string dni, string telefono, string email)
-        {
-            var nuevoCliente = new Cliente(_context)
-            {
-                Nombre = nombre,
-                Dni = dni,
-                Telefono = telefono,
-                Email = email
-            };
-            nuevoCliente.CrearCliente();
-            Console.WriteLine("Cliente creado con éxito.");
-        }
-
-        // Mostrar todos los clientes
-        public void MostrarClientes()
+        // GET: api/Cliente
+        [HttpGet]
+        public ActionResult<IEnumerable<Cliente>> GetClientes()
         {
             var clientes = Cliente.ObtenerClientes(_context);
-            Console.WriteLine("Clientes registrados:");
-            foreach (var cliente in clientes)
-            {
-                Console.WriteLine($"ID: {cliente.Id}, Nombre: {cliente.Nombre}, DNI: {cliente.Dni}");
-            }
+            return Ok(clientes);
         }
 
-        // Mostrar un cliente por ID
-        public void MostrarClientePorId(int id)
+        // GET: api/Cliente/5
+        [HttpGet("{id}")]
+        public ActionResult<Cliente> GetCliente(int id)
         {
             var cliente = Cliente.ObtenerClientePorId(_context, id);
-            if (cliente != null)
-            {
-                Console.WriteLine($"Cliente encontrado: {cliente.Nombre}, DNI: {cliente.Dni}");
-            }
-            else
-            {
-                Console.WriteLine("Cliente no encontrado.");
-            }
+            if (cliente == null) return NotFound();
+            return Ok(cliente);
         }
 
-        // Actualizar un cliente
-        public void ActualizarCliente(int id, string nuevoNombre, string nuevoDni, string nuevoTelefono, string nuevoEmail)
+        // POST: api/Cliente
+        [HttpPost]
+        public IActionResult PostCliente([FromBody] Cliente cliente)
         {
-            var cliente = Cliente.ObtenerClientePorId(_context, id);
-            if (cliente != null)
-            {
-                cliente.Nombre = nuevoNombre;
-                cliente.Dni = nuevoDni;
-                cliente.Telefono = nuevoTelefono;
-                cliente.Email = nuevoEmail;
-                cliente.ActualizarCliente();
-                Console.WriteLine("Cliente actualizado con éxito.");
-            }
-            else
-            {
-                Console.WriteLine("Cliente no encontrado.");
-            }
+            if (cliente == null) return BadRequest("Cliente no proporcionado.");
+
+            if (string.IsNullOrEmpty(cliente.Nombre) || string.IsNullOrEmpty(cliente.Dni))
+                return BadRequest("Nombre y DNI son campos obligatorios.");
+
+            
+            // Guardar cliente en la base de datos
+            _context.Set<Cliente>().Add(cliente);
+            _context.SaveChanges();
+
+            return CreatedAtAction(nameof(GetCliente), new { id = cliente.Id }, cliente);
         }
 
-        // Eliminar un cliente
-        public void EliminarCliente(int id)
+        // PUT: api/Cliente/5
+        // PUT: api/Cliente/5
+        [HttpPut("{id}")]
+        public IActionResult PutCliente(int id, [FromBody] Cliente cliente)
         {
-            var cliente = Cliente.ObtenerClientePorId(_context, id);
-            if (cliente != null)
-            {
-                cliente.EliminarCliente();
-                Console.WriteLine("Cliente eliminado con éxito.");
-            }
-            else
-            {
-                Console.WriteLine("Cliente no encontrado.");
-            }
+            // 1. Comprobamos si el ID del cliente proporcionado en la URL coincide con el ID del cliente en el cuerpo de la solicitud.
+            if (id != cliente.Id) return BadRequest("El ID del cliente no coincide.");
+
+            // 2. Buscamos el cliente en la base de datos por su ID.
+            var clienteExistente = _context.Set<Cliente>().FirstOrDefault(c => c.Id == id);
+
+            // 3. Si no encontramos el cliente con ese ID, devolvemos un error "NotFound" (404).
+            if (clienteExistente == null) return NotFound();
+
+            // 4. Si encontramos el cliente, actualizamos sus propiedades con los valores del cliente que llega en el cuerpo de la solicitud.
+            clienteExistente.Nombre = cliente.Nombre;
+            clienteExistente.Dni = cliente.Dni;
+            clienteExistente.Telefono = cliente.Telefono;
+            clienteExistente.Email = cliente.Email;
+
+            // 5. Marcamos el cliente actualizado para que se guarde en la base de datos.
+            _context.Set<Cliente>().Update(clienteExistente);
+
+            // 6. Guardamos los cambios en la base de datos.
+            _context.SaveChanges();
+
+            // 7. Respondemos con un código de estado 204 No Content para indicar que la operación fue exitosa, pero no hay contenido adicional.
+            return NoContent();
+        }
+
+
+        // DELETE: api/Cliente/5
+        [HttpDelete("{id}")]
+        public IActionResult DeleteCliente(int id)
+        {
+            var cliente = _context.Set<Cliente>().FirstOrDefault(c => c.Id == id);
+            if (cliente == null) return NotFound();
+
+            _context.Set<Cliente>().Remove(cliente);
+            _context.SaveChanges();
+
+            return NoContent();
         }
     }
 }

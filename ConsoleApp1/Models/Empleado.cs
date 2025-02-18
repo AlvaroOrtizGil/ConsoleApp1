@@ -15,5 +15,4 @@ public partial class Empleado
 
     public string? Telefono { get; set; }
 
-    public virtual ICollection<Venta> Venta { get; set; } = new List<Venta>();
 }

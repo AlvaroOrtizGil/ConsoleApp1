@@ -30,7 +30,7 @@ public partial class CochesContext : DbContext
 
     public virtual DbSet<Finanza> Finanzas { get; set; }
 
-    public virtual DbSet<Garantia> Garantias { get; set; }
+   
 
     public virtual DbSet<Marca> Marcas { get; set; }
 
@@ -48,7 +48,6 @@ public partial class CochesContext : DbContext
 
     public virtual DbSet<Tallere> Talleres { get; set; }
 
-    public virtual DbSet<Venta> Ventas { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -85,9 +84,7 @@ public partial class CochesContext : DbContext
                 .HasPrecision(10, 2)
                 .HasColumnName("precio_total");
 
-            entity.HasOne(d => d.IdClienteNavigation).WithMany(p => p.Alquileres)
-                .HasForeignKey(d => d.IdCliente)
-                .HasConstraintName("alquileres_ibfk_2");
+        
 
             entity.HasOne(d => d.IdCocheNavigation).WithMany(p => p.Alquileres)
                 .HasForeignKey(d => d.IdCoche)
@@ -263,39 +260,6 @@ public partial class CochesContext : DbContext
                 .HasColumnName("tipo");
         });
 
-        modelBuilder.Entity<Garantia>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
-
-            entity.ToTable("garantias");
-
-            entity.HasIndex(e => e.IdCliente, "id_cliente");
-
-            entity.HasIndex(e => e.IdCoche, "id_coche");
-
-            entity.Property(e => e.Id)
-                .HasColumnType("int(11)")
-                .HasColumnName("id");
-            entity.Property(e => e.Detalles)
-                .HasColumnType("text")
-                .HasColumnName("detalles");
-            entity.Property(e => e.FechaFin).HasColumnName("fecha_fin");
-            entity.Property(e => e.FechaInicio).HasColumnName("fecha_inicio");
-            entity.Property(e => e.IdCliente)
-                .HasColumnType("int(11)")
-                .HasColumnName("id_cliente");
-            entity.Property(e => e.IdCoche)
-                .HasColumnType("int(11)")
-                .HasColumnName("id_coche");
-
-            entity.HasOne(d => d.IdClienteNavigation).WithMany(p => p.Garantia)
-                .HasForeignKey(d => d.IdCliente)
-                .HasConstraintName("garantias_ibfk_2");
-
-            entity.HasOne(d => d.IdCocheNavigation).WithMany(p => p.Garantia)
-                .HasForeignKey(d => d.IdCoche)
-                .HasConstraintName("garantias_ibfk_1");
-        });
 
         modelBuilder.Entity<Marca>(entity =>
         {
@@ -486,47 +450,7 @@ public partial class CochesContext : DbContext
                 .HasColumnName("telefono");
         });
 
-        modelBuilder.Entity<Venta>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
-
-            entity.ToTable("ventas");
-
-            entity.HasIndex(e => e.IdCliente, "id_cliente");
-
-            entity.HasIndex(e => e.IdCoche, "id_coche");
-
-            entity.HasIndex(e => e.IdEmpleado, "id_empleado");
-
-            entity.Property(e => e.Id)
-                .HasColumnType("int(11)")
-                .HasColumnName("id");
-            entity.Property(e => e.Fecha).HasColumnName("fecha");
-            entity.Property(e => e.IdCliente)
-                .HasColumnType("int(11)")
-                .HasColumnName("id_cliente");
-            entity.Property(e => e.IdCoche)
-                .HasColumnType("int(11)")
-                .HasColumnName("id_coche");
-            entity.Property(e => e.IdEmpleado)
-                .HasColumnType("int(11)")
-                .HasColumnName("id_empleado");
-            entity.Property(e => e.PrecioFinal)
-                .HasPrecision(10, 2)
-                .HasColumnName("precio_final");
-
-            entity.HasOne(d => d.IdClienteNavigation).WithMany(p => p.Venta)
-                .HasForeignKey(d => d.IdCliente)
-                .HasConstraintName("ventas_ibfk_2");
-
-            entity.HasOne(d => d.IdCocheNavigation).WithMany(p => p.Venta)
-                .HasForeignKey(d => d.IdCoche)
-                .HasConstraintName("ventas_ibfk_1");
-
-            entity.HasOne(d => d.IdEmpleadoNavigation).WithMany(p => p.Venta)
-                .HasForeignKey(d => d.IdEmpleado)
-                .HasConstraintName("ventas_ibfk_3");
-        });
+       
 
         OnModelCreatingPartial(modelBuilder);
     }
