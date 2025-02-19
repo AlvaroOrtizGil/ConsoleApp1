@@ -25,7 +25,29 @@ function obtenerClientePorId(id) {
 }
 
 
-function agregarCliente(cliente) {
+function agregarCliente() {
+    // Obtén los valores de los campos de entrada
+    const nombre = document.getElementById('nombreCliente').value;
+    const dni = document.getElementById('dniCliente').value;
+    const telefono = document.getElementById('telefonoCliente').value;
+    const email = document.getElementById('emailCliente').value;
+
+    // Validamos que todos los campos estén llenos
+    if (!nombre || !dni || !telefono || !email) {
+        console.error("Todos los campos son obligatorios.");
+        return;  // Salir si algún campo está vacío
+    }
+
+    // Creamos el objeto cliente
+    const cliente = {
+        nombre: nombre,
+        dni: dni,
+        telefono: telefono,
+        email: email
+    };
+
+    console.log("Cliente a agregar:", cliente);  // Verifica el objeto cliente antes de enviarlo
+
     fetch("http://localhost:5014/api/Cliente", {
         method: 'POST',
         headers: {
@@ -40,6 +62,7 @@ function agregarCliente(cliente) {
         })
         .catch(error => console.error('Error al agregar el cliente:', error));
 }
+
 
 
 
@@ -60,13 +83,33 @@ function actualizarCliente(id, cliente) {
 
 
 
-function eliminarCliente(id) {
-    fetch(`http://localhost:5014/api/Cliente/${id}`, {
+function eliminarCliente() {
+    const id = document.getElementById('idEliminar').value;  // Obtén el valor del input
+
+    // Verifica que el id es un número y no está vacío
+    const numericId = parseInt(id, 10);  // Convierte a número
+
+    if (isNaN(numericId)) {
+        console.error("El ID no es válido:", id);
+        return;
+    }
+
+    console.log("ID a eliminar:", numericId);  // Verifica el id antes de enviarlo
+
+    const url = `http://localhost:5014/api/Cliente/${numericId}`;
+
+    fetch(url, {
         method: 'DELETE'
     })
-        .then(() => {
-            console.log('Cliente eliminado');
-            obtenerClientes(); // Volver a cargar la lista de clientes después de eliminar uno
+        .then(response => {
+            if (response.ok) {
+                console.log('Cliente eliminado');
+                obtenerClientes(); // Recarga la lista de clientes
+            } else {
+                console.error("Error al eliminar el cliente. Status:", response.status);
+            }
         })
-        .catch(error => console.error('Error al eliminar el cliente:', error));
+        .catch(error => {
+            console.error('Error al eliminar el cliente:', error);
+        });
 }
