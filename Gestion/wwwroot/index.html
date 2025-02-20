@@ -3,66 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Clientes</title>
+    <title>Gestión de Clientes y Empleados</title>
     <script defer src="js/site.js"></script>
+    <script defer src="js/siteEmpleados.js"></script>  <!-- Nuevo script para empleados -->
+    <link rel="stylesheet" href="css/site.css">
 </head>
 <body>
-    <h1>Gestión de Clientes</h1>
+    <header>
+        <h1>Gestión de Clientes y Empleados</h1>
+    </header>
 
-    <!-- Botón para obtener los clientes -->
-    <button onclick="obtenerClientes()">Cargar Clientes</button>
+    <main>
+        <!-- Sección de Clientes -->
+        <section>
+            <button id="btnCargarClientes" onclick="obtenerClientes()">Cargar Clientes</button>
+        </section>
 
-    <h2>Lista de Clientes</h2>
-    <ul id="clientes-list">
-        <!-- Los clientes se mostrarán aquí -->
-    </ul>
+        <section>
+            <h2>Lista de Clientes</h2>
+            <ul id="clientes-list"></ul>
+        </section>
 
-    <h2>Agregar Cliente</h2>
-    <form id="formulario-agregar-cliente">
-        <label for="nombreCliente">Nombre:</label>
-        <input type="text" id="nombreCliente" name="nombreCliente" required>
+        <section>
+            <h2>Agregar Cliente</h2>
+            <form id="formulario-agregar-cliente">
+                <input type="text" id="nombreCliente" placeholder="Nombre" required>
+                <input type="text" id="dniCliente" placeholder="DNI" required>
+                <input type="text" id="telefonoCliente" placeholder="Teléfono" required>
+                <input type="email" id="emailCliente" placeholder="Email" required>
+                <button type="button" onclick="agregarCliente()">Agregar</button>
+            </form>
+        </section>
 
-        <label for="dniCliente">DNI:</label>
-        <input type="text" id="dniCliente" name="dniCliente" required>
+        <section>
+            <h2>Actualizar Cliente</h2>
+            <form id="formulario-actualizar-cliente">
+                <input type="number" id="idActualizar" placeholder="ID Cliente" required>
+                <input type="text" id="nombreActualizar" placeholder="Nombre" required>
+                <input type="text" id="dniActualizar" placeholder="DNI" required>
+                <input type="text" id="telefonoActualizar" placeholder="Teléfono" required>
+                <input type="email" id="emailActualizar" placeholder="Email" required>
+                <button type="button" onclick="actualizarCliente()">Actualizar</button>
+            </form>
+        </section>
 
-        <label for="telefonoCliente">Teléfono:</label>
-        <input type="text" id="telefonoCliente" name="telefonoCliente" required>
+        <section>
+            <h2>Eliminar Cliente</h2>
+            <form id="formulario-eliminar-cliente">
+                <input type="number" id="idEliminar" placeholder="ID Cliente" required>
+                <button type="button" onclick="eliminarCliente()">Eliminar</button>
+            </form>
+        </section>
 
-        <label for="emailCliente">Email:</label>
-        <input type="email" id="emailCliente" name="emailCliente" required>
+        <!-- Sección de Empleados -->
+        <section>
+            <button id="btnCargarEmpleados" onclick="obtenerEmpleados()">Cargar Empleados</button>
+        </section>
 
-        <button type="button" onclick="agregarCliente()">Agregar Cliente</button>
-    </form>
+        <section>
+            <h2>Lista de Empleados</h2>
+            <ul id="empleados-list"></ul>
+        </section>
 
+        <section>
+            <h2>Agregar Empleado</h2>
+            <form id="formulario-agregar-empleado">
+                <input type="text" id="nombreEmpleado" placeholder="Nombre" required>
+                <input type="text" id="dniEmpleado" placeholder="DNI" required>
+                <input type="text" id="telefonoEmpleado" placeholder="Teléfono" required>
+                <input type="email" id="emailEmpleado" placeholder="Email" required>
 
-    <h2>Actualizar Cliente</h2>
-    <form id="formulario-actualizar-cliente">
-        <label for="idActualizar">ID Cliente:</label>
-        <input type="number" id="idActualizar" name="idActualizar" required>
+                <!-- Selector de puesto de trabajo -->
+                <label for="puestoEmpleado">Puesto de Trabajo:</label>
+                <select id="puestoEmpleado" required>
+                    <option value="">Seleccionar puesto</option>
+                    <option value="Gerente">Gerente</option>
+                    <option value="Vendedor">Vendedor</option>
+                    <option value="Repartidor">Repartidor</option>
+                </select>
 
-        <label for="nombreActualizar">Nombre:</label>
-        <input type="text" id="nombreActualizar" name="nombreActualizar" required>
+                <!-- Salario -->
+                <input type="number" id="salarioEmpleado" placeholder="Salario" required>
 
-        <label for="dniActualizar">DNI:</label>
-        <input type="text" id="dniActualizar" name="dniActualizar" required>
+                <button type="button" onclick="agregarEmpleado()">Agregar</button>
+            </form>
+        </section>
 
-        <label for="telefonoActualizar">Teléfono:</label>
-        <input type="text" id="telefonoActualizar" name="telefonoActualizar" required>
+        <section>
+            <h2>Actualizar Empleado</h2>
+            <form id="formulario-actualizar-empleado">
+                <input type="number" id="idActualizarEmpleado" placeholder="ID Empleado" required>
+                <input type="text" id="nombreActualizarEmpleado" placeholder="Nombre" required>
+                <input type="text" id="dniActualizarEmpleado" placeholder="DNI" required>
+                <input type="text" id="telefonoActualizarEmpleado" placeholder="Teléfono" required>
+                <input type="email" id="emailActualizarEmpleado" placeholder="Email" required>
 
-        <label for="emailActualizar">Email:</label>
-        <input type="email" id="emailActualizar" name="emailActualizar" required>
+                <!-- Selector de puesto de trabajo -->
+                <label for="puestoActualizarEmpleado">Puesto de Trabajo:</label>
+                <select id="puestoActualizarEmpleado" required>
+                    <option value="">Seleccionar puesto</option>
+                    <option value="Gerente">Gerente</option>
+                    <option value="Vendedor">Vendedor</option>
+                    <option value="Repartidor">Repartidor</option>
+                </select>
 
-        <!-- Botón para actualizar el cliente -->
-        <button type="button" onclick="actualizarClienteDesdeFormulario()">Actualizar Cliente</button>
-    </form>
-    <h2>Eliminar Cliente</h2>
-    <form id="formulario-eliminar-cliente">
-        <label for="idEliminar">ID Cliente:</label>
-        <input type="number" id="idEliminar" name="idEliminar" required>
+                <!-- Salario -->
+                <input type="number" id="salarioActualizarEmpleado" placeholder="Salario" required>
 
-        <!-- Botón para eliminar el cliente -->
-        <button type="button" onclick="eliminarCliente()">Eliminar Cliente</button>
-    </form>
+                <button type="button" onclick="actualizarEmpleado()">Actualizar</button>
+            </form>
+        </section>
 
+        <section>
+            <h2>Eliminar Empleado</h2>
+            <form id="formulario-eliminar-empleado">
+                <input type="number" id="idEliminarEmpleado" placeholder="ID Empleado" required>
+                <button type="button" onclick="eliminarEmpleado()">Eliminar</button>
+            </form>
+        </section>
+    </main>
 </body>
 </html>

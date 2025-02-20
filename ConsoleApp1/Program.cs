@@ -19,8 +19,9 @@ namespace ConsoleApp1
             // Crear un contexto para interactuar con la base de datos
             using (var context = new CochesContext(options))
             {
-                // Crear instancia del controlador
+                // Crear instancia de los controladores
                 var clienteController = new ClienteController(context);
+                var empleadoController = new EmpleadoController(context);
 
                 // Crear un cliente
                 clienteController.CrearCliente("Juan Pérez", "11345278A", "123456789", "juan.perez@email.com");
@@ -44,10 +45,32 @@ namespace ConsoleApp1
 
                 // Eliminar un cliente
                 clienteController.EliminarCliente(1);
+
+                // Crear un empleado
+                empleadoController.CrearEmpleado("Carlos Gómez", "Vendedor", 2500.00m, "987654321");
+
+                // Mostrar todos los empleados
+                var empleados = empleadoController.ObtenerEmpleados();
+                foreach (var empleado in empleados)
+                {
+                    Console.WriteLine($"Empleado: {empleado.Nombre}, Puesto: {empleado.Puesto}, Salario: {empleado.Salario}, Teléfono: {empleado.Telefono}");
+                }
+
+                // Mostrar un empleado por su ID
+                var empleadoPorId = empleadoController.ObtenerEmpleadoPorId(1);
+                if (empleadoPorId != null)
+                {
+                    Console.WriteLine($"Empleado encontrado: {empleadoPorId.Nombre}, Puesto: {empleadoPorId.Puesto}, Salario: {empleadoPorId.Salario}, Teléfono: {empleadoPorId.Telefono}");
+                }
+
+                // Actualizar un empleado
+                empleadoController.ActualizarEmpleado(1, "Carlos Gómez Actualizado", "Supervisor", 3000.00m, "987654322");
+
+                // Eliminar un empleado
+                empleadoController.EliminarEmpleado(1);
             }
 
             Console.ReadLine(); // Mantener la consola abierta para ver los resultados
         }
     }
-
 }

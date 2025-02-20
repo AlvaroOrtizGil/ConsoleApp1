@@ -86,9 +86,6 @@ public partial class CochesContext : DbContext
 
         
 
-            entity.HasOne(d => d.IdCocheNavigation).WithMany(p => p.Alquileres)
-                .HasForeignKey(d => d.IdCoche)
-                .HasConstraintName("alquileres_ibfk_1");
         });
 
         modelBuilder.Entity<Cliente>(entity =>
@@ -124,7 +121,7 @@ public partial class CochesContext : DbContext
 
             entity.ToTable("coches");
 
-            entity.HasIndex(e => e.IdModelo, "id_modelo");
+            entity.HasIndex(e => e.id_modelo, "id_modelo");
 
             entity.HasIndex(e => e.Matricula, "matricula").IsUnique();
 
@@ -137,7 +134,7 @@ public partial class CochesContext : DbContext
             entity.Property(e => e.Color)
                 .HasMaxLength(20)
                 .HasColumnName("color");
-            entity.Property(e => e.IdModelo)
+            entity.Property(e => e.id_modelo)
                 .HasColumnType("int(11)")
                 .HasColumnName("id_modelo");
             entity.Property(e => e.Matricula)
@@ -147,9 +144,7 @@ public partial class CochesContext : DbContext
                 .HasPrecision(10, 2)
                 .HasColumnName("precio");
 
-            entity.HasOne(d => d.IdModeloNavigation).WithMany(p => p.Coches)
-                .HasForeignKey(d => d.IdModelo)
-                .HasConstraintName("coches_ibfk_1");
+            
         });
 
         modelBuilder.Entity<CochesSeguro>(entity =>
@@ -171,9 +166,7 @@ public partial class CochesContext : DbContext
             entity.Property(e => e.FechaFin).HasColumnName("fecha_fin");
             entity.Property(e => e.FechaInicio).HasColumnName("fecha_inicio");
 
-            entity.HasOne(d => d.IdCocheNavigation).WithMany(p => p.CochesSeguros)
-                .HasForeignKey(d => d.IdCoche)
-                .HasConstraintName("coches_seguros_ibfk_1");
+         
 
             entity.HasOne(d => d.IdSeguroNavigation).WithMany(p => p.CochesSeguros)
                 .HasForeignKey(d => d.IdSeguro)
@@ -349,9 +342,6 @@ public partial class CochesContext : DbContext
                 .HasColumnType("int(11)")
                 .HasColumnName("id_taller");
 
-            entity.HasOne(d => d.IdCocheNavigation).WithMany(p => p.Reparaciones)
-                .HasForeignKey(d => d.IdCoche)
-                .HasConstraintName("reparaciones_ibfk_1");
 
             entity.HasOne(d => d.IdTallerNavigation).WithMany(p => p.Reparaciones)
                 .HasForeignKey(d => d.IdTaller)
